@@ -17,19 +17,19 @@ class root (
 
   # The user. No, we don't want to support 'absent' :-)
   user { 'root':
+    ensure   => 'present',
     password => $password,
     comment  => $comment,
     shell    => $shell,
     home     => '/root',
     uid      => '0',
     gid      => '0',
-    ensure   => present,
   }
 
   # We might want to manage the authorized_keys content, or disable it
   if $ssh_authorized_keys_content != '' or $ssh_authorized_keys_source != '' {
     file { '/root/.ssh':
-      ensure => directory,
+      ensure => 'directory',
       owner  => 'root',
       group  => 'root',
       mode   => '0700',
