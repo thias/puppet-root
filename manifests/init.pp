@@ -6,7 +6,7 @@
 #  include '::root'
 #
 class root (
-  $password                    = undef,
+  $password                    = $::root::params::password,
   $comment                     = $::root::params::comment,
   $shell                       = $::root::params::shell,
   $ssh_authorized_keys_ensure  = undef,
