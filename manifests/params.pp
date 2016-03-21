@@ -2,6 +2,7 @@ class root::params {
 
   $comment = 'root'
   $shell = '/bin/bash'
+  $password = $::root_pw
 
   case $::operatingsystem {
     'Gentoo': {
