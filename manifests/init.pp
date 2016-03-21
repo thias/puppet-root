@@ -12,6 +12,8 @@ class root (
   $ssh_authorized_keys_ensure  = undef,
   $ssh_authorized_keys_content = undef,
   $ssh_authorized_keys_source  = undef,
+  $k5login_ensure              = undef,
+  $k5login_principals          = [],
   $email_recipient             = undef,
 ) inherits ::root::params {
 
@@ -43,6 +45,15 @@ class root (
       mode    => '0600',
       content => $ssh_authorized_keys_content,
       source  => $ssh_authorized_keys_source,
+    }
+  }
+
+  # We might want to manage root's .k5login
+  if $k5login_principals or $k5login_ensure == 'absent' {
+    k5login{'/root/.k5login':
+      ensure     => $k5login_ensure,
+      mode       => 600,
+      principals => $k5login_principals
     }
   }
 
