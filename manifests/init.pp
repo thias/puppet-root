@@ -13,6 +13,7 @@ class root (
   $ssh_authorized_keys_content = undef,
   $ssh_authorized_keys_source  = undef,
   $email_recipient             = undef,
+  $root_timeout                = undef,
 ) inherits ::root::params {
 
   # The user. No, we don't want to support 'absent' :-)
@@ -56,6 +57,16 @@ class root (
     exec { 'root-newaliases':
       command     => '/usr/bin/newaliases',
       refreshonly => true,
+    }
+  }
+
+  # We usually don't want root terminals to sit idle for too long
+  if $root_timeout {
+    file {'/etc/profile.d/999_root_timeout.sh':
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => template('root/root_timeout.sh'),
     }
   }
 
