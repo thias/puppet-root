@@ -9,6 +9,7 @@ class root (
   $password                    = undef,
   $comment                     = $::root::params::comment,
   $shell                       = $::root::params::shell,
+  $ssh_authorized_keys         = {},
   $ssh_authorized_keys_ensure  = undef,
   $ssh_authorized_keys_content = undef,
   $ssh_authorized_keys_source  = undef,
@@ -35,7 +36,7 @@ class root (
       mode   => '0700',
     }
   }
-  if ( $ssh_authorized_keys_content != '' or $ssh_authorized_keys_source != '' ) or $ssh_authorized_keys_ensure == 'absent' {
+  if ( $ssh_authorized_keys_content != undef or $ssh_authorized_keys_source != undef ) or $ssh_authorized_keys_ensure == 'absent' {
     file { '/root/.ssh/authorized_keys':
       ensure  => $ssh_authorized_keys_ensure,
       owner   => 'root',
@@ -44,6 +45,22 @@ class root (
       content => $ssh_authorized_keys_content,
       source  => $ssh_authorized_keys_source,
     }
+  } else {
+    # If no source or content has been specified and ensure isn't absent, we
+    # can use ssh_authorized_key
+
+    # Ensure that old keys are removed
+    User {
+      purge_ssh_keys => true,
+    }
+
+    # Default params
+    $ssh_authorized_keys_default = {
+      user => 'root',
+      type => 'ssh-rsa',
+    }
+
+    ensure_resources('ssh_authorized_key', $ssh_authorized_keys, $ssh_authorized_keys_default)
   }
 
   # We usually don't want root email to get ignored
