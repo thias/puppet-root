@@ -1,3 +1,4 @@
+#### 2018-05-31 - 1.0.1
 * Add `ssh_authorized_keys` hash parameter (#5, @forgodssake).
 
 #### 2015-10-07 - 1.0.0
