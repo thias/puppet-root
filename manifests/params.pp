@@ -3,7 +3,7 @@ class root::params {
   $comment = 'root'
   $shell = '/bin/bash'
 
-  case $::operatingsystem {
+  case $facts['os']['name'] {
     'Gentoo': {
       $mailalias_target = '/etc/mail/aliases'
     }
